@@ -8,8 +8,8 @@ export async function test() {
 
   await manager.switchConfig({
     user: {
-      name: "wootaik lee",
-      email: "wootaiklee1871@gmail.com"
+      name: "fined000",
+      email: "fined000@naver.com"
     }
   });
 
