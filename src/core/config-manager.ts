@@ -6,48 +6,51 @@ export class GitConfigManager {
 
   async getCurrentConfig(): Promise<GitConfig> {
     try {
-      const globalConfig = await this.git.listConfig('global');
-      const localConfig = await this.git.listConfig('local');
-
-      console.log('Global config:', globalConfig);
-      console.log('Local config:', localConfig);
-      
-      return this.parseConfig({
-        ...globalConfig.all,
-        ...localConfig.all
-      })
+      const stdout = await this.git.raw(['config', '--local', '--list']);
+      console.log('Raw local config:', stdout);
+      return this.parseConfig(stdout);
     } catch (error) {
       console.error("Failed to get git config:", error);
       throw error;
     }
   }
 
-  private parseConfig(config: any): GitConfig {
-    const getName = (key: string) => {
-      const value = config[key];
-      return Array.isArray(value) ? value[value.length - 1] : value;
-    }
+  private parseConfig(configStr: string): GitConfig {
+    const config: Record<string, string> = {};
+    configStr.split('\n').forEach(line => {
+      const [key, value] = line.split('=');
+      if (key && value) {
+        config[key.trim()] = value.trim();
+      }
+    });
 
-    const parsedCofig = {
+    return {
       user: {
-        name: getName('user.name') || '',
-        email: getName('user.email') || ''
+        name: config['user.name'] || '',
+        email: config['user.email'] || ''
       }
     }
-    return parsedCofig;
   }
 
   async switchConfig(newConfig: GitConfig): Promise<void> {
     try {
       console.log('Switching to config:', newConfig);
+
+      await this.git.raw(['config', '--local', '--unset-all', 'user.name']);
+      await this.git.raw(['config', '--local', '--unset-all', 'user.email']);
+
       // 새로운 설정 추가
-      await this.git.addConfig('user.name', newConfig.user.name, false, 'global');
-      await this.git.addConfig('user.email', newConfig.user.email, false, 'global');
+      await this.git.raw(['config', '--local', 'user.name', newConfig.user.name]);
+      await this.git.raw(['config', '--local', 'user.email', newConfig.user.email]);
       
       console.log('Config switched successfully');
     } catch (error) {
-      console.error('Error switching git config:', error);
-      throw error;
+      if ((error as any)?.message?.includes('--unset-all')) {
+        // 기존 설정이 없는 경우 무시하고 계속 진행
+        console.log('No existing config to unset');
+      } else {
+        throw error;
+      }
     }
   }
 }
