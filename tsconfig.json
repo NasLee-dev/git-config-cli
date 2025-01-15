@@ -5,21 +5,26 @@
   },
   "compilerOptions": {
     "target": "ES2020",
-    "useDefineForClassFields": true,
-    "module": "ESNext",
-    "lib": ["ES2020", "DOM"],
-    "skipLibCheck": true,
+    "module": "CommonJS",        // ESNext -> CommonJS로 변경
     "moduleResolution": "node",
-    "allowImportingTsExtensions": false,
+    "outDir": "./dist",         // 추가: 빌드 출력 디렉토리 지정
+    "allowSyntheticDefaultImports": true,  // 추가: chalk import를 위해
+    "esModuleInterop": true,    // 추가: CommonJS 모듈 호환성
     "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "rootDir": "src",          // 추가: 소스 루트 디렉토리
+    // 불필요한 옵션들 제거
+    "useDefineForClassFields": true,
+    "lib": ["ES2020"],         // DOM 제거 (Node.js 환경이므로)
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": false,           // true -> false로 변경 (빌드 출력 필요)
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "declaration": true,
-    "declarationDir": "./dist/types"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]  // 추가
 }
