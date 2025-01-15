@@ -1,5 +1,5 @@
 import simpleGit from "simple-git";
-import { GitConfig, UserType } from "../types";
+import { GitConfig } from "../types";
 
 export class GitConfigManager {
   private git = simpleGit();
