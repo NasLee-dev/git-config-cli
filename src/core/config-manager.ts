@@ -53,12 +53,4 @@ export class GitConfigManager {
       }
     }
   }
-
-  async userLogin(user: UserType): Promise<void> {
-    try {
-      
-    } catch (error) {
-      
-    }
-  }
 }
