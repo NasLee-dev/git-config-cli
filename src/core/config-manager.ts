@@ -1,5 +1,5 @@
 import simpleGit from "simple-git";
-import { GitConfig } from "../types";
+import { GitConfig, UserType } from "../types";
 
 export class GitConfigManager {
   private git = simpleGit();
@@ -51,6 +51,14 @@ export class GitConfigManager {
       } else {
         throw error;
       }
+    }
+  }
+
+  async userLogin(user: UserType): Promise<void> {
+    try {
+      
+    } catch (error) {
+      
     }
   }
 }
