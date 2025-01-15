@@ -1,6 +1,6 @@
 {
   "name": "git-config-manager",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "type": "module",
   "main": "./dist/git-config-manager.cjs.js",
   "module": "./dist/git-config-manager.es.js",
@@ -12,17 +12,20 @@
       "types": "./dist/types/index.d.ts"
     }
   },
+  "bin": {
+    "git-config": "./dist/index.cjs"
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && chmod +x dist/index.cjs",
     "preview": "vite preview",
     "test": "vitest",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "test:dev": "node --loader ts-node/esm src/test.ts"
+    "test:dev": "node --loader ts-node/esm src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +40,10 @@
     "vitest": "^2.1.8"
   },
   "dependencies": {
+    "@types/inquirer": "^9.0.7",
+    "chalk": "^4.1.2",
+    "commander": "^9.0.0",
+    "inquirer": "^8.2.6",
     "simple-git": "^3.27.0"
   }
 }
